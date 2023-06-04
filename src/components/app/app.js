@@ -1,5 +1,4 @@
 import { React, Component } from "react";
-import { formatDistanceToNow } from 'date-fns'
 
 import AppHeader from "../app-header";
 import NewTaskForm from "../new-task-form";
@@ -27,12 +26,12 @@ class App extends Component {
         this.deleteItem = (id) => {
             this.setState(({ todoData }) => {
                 const index = todoData.findIndex((el) => el.id === id);
-        
+
                 const newArray = [
                     ...todoData.slice(0, index),
                     ...todoData.slice(index + 1)
                 ];
-        
+
                 return {
                     todoData: newArray
                 }
@@ -40,15 +39,15 @@ class App extends Component {
         };
 
         this.addItem = (text) => {
-      
+
             const newItem = this.createTodoItem(text);
-            
+
             this.setState(({ todoData }) => {
                 const newArray = [
                     ...todoData,
                     newItem
                 ];
-        
+
                 return {
                     todoData: newArray
                 }
@@ -57,38 +56,38 @@ class App extends Component {
 
         this.editItem = (text) => {
             const newItem = this.createTodoItem(text);
-            
-      
+
+
             this.setState(({ todoData }) => {
                 const edit = todoData.findIndex((el) => el.edit);
-        
+
                 const newArray = [
                     ...todoData.slice(0, edit),
                     newItem,
                     ...todoData.slice(edit + 1)
                 ];
-        
+
                 return {
                     todoData: newArray
                 }
             });
         };
-    
-        this.toggleProperty = ( arr, id, propName) => {
+
+        this.toggleProperty = (arr, id, propName) => {
             const index = arr.findIndex((el) => el.id === id);
-      
+
             const oldItem = arr[index];
             const newItem = {
-                ...oldItem, 
+                ...oldItem,
                 [propName]: !oldItem[propName]
             };
-            
+
             return [
-              ...arr.slice(0, index),
-              newItem,
-              ...arr.slice(index + 1)
+                ...arr.slice(0, index),
+                newItem,
+                ...arr.slice(index + 1)
             ];
-          }
+        }
 
         this.onToggleDone = (id) => {
             this.setState(({ todoData }) => {
@@ -107,18 +106,18 @@ class App extends Component {
         }
 
         this.filter = (items, filter) => {
-            switch(filter) {
-              case 'all':
-                return items;
-              case 'active':
-                return items.filter((item) => !item.completed);
-              case 'completed':
-                return items.filter((item) => item.completed);
-              default:
-                return items;
-           } 
+            switch (filter) {
+                case 'all':
+                    return items;
+                case 'active':
+                    return items.filter((item) => !item.completed);
+                case 'completed':
+                    return items.filter((item) => item.completed);
+                default:
+                    return items;
+            }
         }
-      
+
         this.onFilterChange = (filter) => {
             this.setState({ filter });
         }
@@ -127,7 +126,7 @@ class App extends Component {
         this.clearDone = () => {
             this.setState(({ todoData }) => {
                 const active = todoData.filter((el) => !el.completed);
-                
+
                 return {
                     todoData: active
                 }
@@ -137,13 +136,9 @@ class App extends Component {
     };
 
     createTodoItem(label) {
-        const timer = formatDistanceToNow(
-            new Date(),
-            {includeSeconds: true})
         return {
             id: this.maxId++,
             label,
-            time: timer,
             completed: false,
             edit: false,
         }
@@ -156,22 +151,22 @@ class App extends Component {
 
         const doneCount = todoData.filter((item) => item.completed).length;
         const todoCount = todoData.length - doneCount;
-        
+
         return (
             <div className="todoapp">
                 <AppHeader />
                 <NewTaskForm onItemAdded={this.addItem} />
                 <section className="main">
-                    <TaskList todos={ visibleItems }
-                              onDeleted={ this.deleteItem }
-                              onToggleDone={this.onToggleDone}
-                              onToggleEdit={this.onToggleEdit}
-                              onEditItem={this.editItem} />
+                    <TaskList todos={visibleItems}
+                        onDeleted={this.deleteItem}
+                        onToggleDone={this.onToggleDone}
+                        onToggleEdit={this.onToggleEdit}
+                        onEditItem={this.editItem} />
                     <Footer toDo={todoCount}
-                            filter={filter}
-                            todos={ todoData }
-                            onFilterChange={this.onFilterChange}
-                            onDoneClear={this.clearDone} />
+                        filter={filter}
+                        todos={todoData}
+                        onFilterChange={this.onFilterChange}
+                        onDoneClear={this.clearDone} />
                 </section>
             </div>
         );
