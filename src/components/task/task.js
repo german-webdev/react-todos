@@ -32,7 +32,7 @@ class Task extends Component {
     componentDidMount() {
         this.elapsedTimeInterval = setInterval(() => {
             this.setState({
-                elapsedTime: formatDistanceToNow(this.state.createdTime, { includeSeconds: true })
+                elapsedTime: formatDistanceToNow(this.state.createdTime, { includeSeconds: true, addSuffix: true })
             })
         }, 1000);
     };
