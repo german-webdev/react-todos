@@ -17,7 +17,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "eslintConfig": {
     "extends": [
@@ -36,5 +38,30 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.1",
+    "@babel/eslint-parser": "^7.21.8",
+    "eslint": "^8.42.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "2.8.8"
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/german-webdev/react-todos.git"
+  },
+  "author": "P.G.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/german-webdev/react-todos/issues"
+  },
+  "homepage": "https://github.com/german-webdev/react-todos#readme"
 }
