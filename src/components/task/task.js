@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { formatDistanceToNow } from 'date-fns';
 
-import './task.css';
-
 class Task extends Component {
   constructor(props) {
     super(props);
@@ -100,7 +98,7 @@ class Task extends Component {
             className={editor}
             placeholder="Get modified task"
             onChange={this.onLabelChange}
-            value=    {this.state.label}
+            value={this.state.label}
           />
         </form>
       </li>

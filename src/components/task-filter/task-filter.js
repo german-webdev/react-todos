@@ -1,8 +1,6 @@
 import { Component, React } from 'react';
 import PropTypes from 'prop-types';
 
-import './task-filter.css';
-
 class TaskFilter extends Component {
   constructor(props) {
     super(props);

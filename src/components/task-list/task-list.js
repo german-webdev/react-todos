@@ -2,7 +2,6 @@ import { React } from 'react';
 import PropTypes from 'prop-types';
 
 import Task from '../task';
-import './task-list.css';
 
 function TaskList({ todos, onDeleted, onToggleDone, onToggleEdit, onEditItem }) {
   return (

@@ -5,8 +5,6 @@ import NewTaskForm from '../new-task-form';
 import TaskList from '../task-list';
 import Footer from '../footer';
 
-import './app.css';
-
 class App extends Component {
   id = 1;
 

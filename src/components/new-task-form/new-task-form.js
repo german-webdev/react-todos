@@ -1,7 +1,5 @@
 import { Component, React } from 'react';
 
-import './new-task-form.css';
-
 class NewTaskForm extends Component {
   constructor(props) {
     super(props);

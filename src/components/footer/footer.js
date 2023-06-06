@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import TaskFilter from '../task-filter';
 
-import './footer.css';
-
 function Footer({ filter, onFilterChange, onDoneClear, toDo }) {
   return (
     <footer className="footer">
