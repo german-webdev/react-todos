@@ -19,7 +19,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "prepare": "husky install"
   },
   "eslintConfig": {
     "extends": [
@@ -65,16 +66,5 @@
   "bugs": {
     "url": "https://github.com/german-webdev/react-todos/issues"
   },
-  "homepage": "https://github.com/german-webdev/react-todos#readme",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.js": [
-      "npm run lint:fix",
-      "git add"
-    ]
-  }
+  "homepage": "https://github.com/german-webdev/react-todos#readme"
 }
