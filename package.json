@@ -50,6 +50,8 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
     "prettier": "2.8.8"
   },
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
@@ -63,5 +65,16 @@
   "bugs": {
     "url": "https://github.com/german-webdev/react-todos/issues"
   },
-  "homepage": "https://github.com/german-webdev/react-todos#readme"
+  "homepage": "https://github.com/german-webdev/react-todos#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "npm run lint:fix",
+      "git add"
+    ]
+  }
 }
