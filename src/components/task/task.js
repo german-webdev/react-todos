@@ -100,7 +100,7 @@ class Task extends Component {
             className={editor}
             placeholder="Get modified task"
             onChange={this.onLabelChange}
-            value={this.state.label}
+            value=    {this.state.label}
           />
         </form>
       </li>
