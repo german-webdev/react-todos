@@ -34,8 +34,8 @@ class NewTaskForm extends Component {
         this.props.onItemAdded(label, minutes, seconds);
         this.setState({
           label: '',
-          minutes: '',
-          seconds: '',
+          minutes: null,
+          seconds: null,
         });
       }
     };
@@ -58,9 +58,7 @@ class NewTaskForm extends Component {
     const { label, minutes, seconds } = this.state;
 
     const viewMinutes =
-      minutes !== null &&
-      minutes !== '' &&
-      minutes.match(/^([0-9]{0,2}((-[0-9]{0,}){0,2})(,([0-9]{0,2}((-[0-9]{0,2}){0,1}))){0,})$/)
+      minutes !== null && minutes.match(/^([0-9]{0,2}((-[0-9]{0,}){0,2})(,([0-9]{0,2}((-[0-9]{0,2}){0,1}))){0,})$/)
         ? minutes
         : '';
     const viewSeconds =

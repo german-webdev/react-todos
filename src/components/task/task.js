@@ -75,7 +75,7 @@ class Task extends Component {
     this.startTimer = setInterval(() => {
       const { minutes, seconds, timerActive } = this.state;
 
-      if (seconds > 0 && timerActive) {
+      if ((seconds > 0 || minutes > 0) && timerActive) {
         this.setState(() => {
           return {
             seconds: seconds - 1,
@@ -83,11 +83,11 @@ class Task extends Component {
         });
       }
 
-      if (seconds === 0 && minutes > 0) {
+      if ((seconds === 0 || seconds === -1) && minutes >= 1) {
         this.setState(() => {
           return {
             minutes: minutes - 1,
-            seconds: 59,
+            seconds: seconds + 59,
           };
         });
       }
