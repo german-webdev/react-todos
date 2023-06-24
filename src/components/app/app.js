@@ -12,7 +12,7 @@ class App extends Component {
     super();
     this.state = {
       todoData: [
-        this.createTodoItem('Task 1', 12, 25),
+        this.createTodoItem('Task 1', 2, 3),
         this.createTodoItem('Task 2', 13, 26),
         this.createTodoItem('Task 3', 14, 27),
       ],

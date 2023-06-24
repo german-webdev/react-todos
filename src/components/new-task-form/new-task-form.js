@@ -5,8 +5,8 @@ class NewTaskForm extends Component {
     super(props);
     this.state = {
       label: '',
-      minutes: null,
-      seconds: null,
+      minutes: '',
+      seconds: '',
     };
 
     this.onLabelChange = (event) => {
@@ -30,13 +30,28 @@ class NewTaskForm extends Component {
     this.onSubmit = (event) => {
       const { label, minutes, seconds } = this.state;
       event.preventDefault();
-      this.props.onItemAdded(label, minutes, seconds);
-      this.setState({
-        label: '',
-        minutes: null,
-        seconds: null,
-      });
+      if (label !== '' && minutes !== '' && seconds !== '') {
+        this.props.onItemAdded(label, minutes, seconds);
+        this.setState({
+          label: '',
+          minutes: '',
+          seconds: '',
+        });
+      }
     };
+  }
+
+  componentDidMount() {
+    this.keyDownEventHandler = (event) => {
+      if (event.key === 'Enter') {
+        this.onSubmit(event);
+      }
+    };
+    document.addEventListener('keydown', this.keyDownEventHandler);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.keyDownEventHandler);
   }
 
   render() {

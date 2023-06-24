@@ -11,6 +11,8 @@ class Task extends Component {
       label: this.props.label,
       minutes: this.props.minutes,
       seconds: this.props.seconds,
+      timerActive: false,
+
       createdTime: new Date(),
       elapsedTime: 'now',
     };
@@ -37,26 +39,68 @@ class Task extends Component {
       });
     };
 
-    this.componentDidMount = () => {
-      const { updateInterval } = this.props;
-      this.elapsedTimeInterval = setInterval(() => {
-        this.setState(({ createdTime }) => {
-          return {
-            elapsedTime: formatDistanceToNow(createdTime, { includeSeconds: true, addSuffix: true }),
-          };
-        });
-      }, updateInterval);
-    };
-
-    this.componentWillUnmount = () => {
-      clearInterval(this.elapsedTimeInterval);
-    };
-
     this.handleButtonClick = () => {
       setTimeout(() => {
         this.inputRef.current.focus();
       }, 100);
     };
+
+    this.activeTimer = () => {
+      this.setState(() => {
+        return {
+          timerActive: true,
+        };
+      });
+    };
+
+    this.deactivatedTimer = () => {
+      this.setState(() => {
+        return {
+          timerActive: false,
+        };
+      });
+    };
+  }
+
+  componentDidMount() {
+    const { updateInterval } = this.props;
+    this.elapsedTimeInterval = setInterval(() => {
+      this.setState(({ createdTime }) => {
+        return {
+          elapsedTime: formatDistanceToNow(createdTime, { includeSeconds: true, addSuffix: true }),
+        };
+      });
+    }, updateInterval);
+
+    this.startTimer = setInterval(() => {
+      const { minutes, seconds, timerActive } = this.state;
+
+      if (seconds > 0 && timerActive) {
+        this.setState(() => {
+          return {
+            seconds: seconds - 1,
+          };
+        });
+      }
+
+      if (seconds === 0 && minutes > 0) {
+        this.setState(() => {
+          return {
+            minutes: minutes - 1,
+            seconds: 59,
+          };
+        });
+      }
+
+      if (minutes === 0 && seconds === 0) {
+        clearInterval(this.startTimer);
+      }
+    }, 1000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.startTimer);
+    clearInterval(this.elapsedTimeInterval);
   }
 
   render() {
@@ -83,10 +127,10 @@ class Task extends Component {
           <label>
             <span className="title">{label}</span>
             <span className="description">
-              <button type="button" className="icon icon-play" />
-              <button type="button" className="icon icon-pause" />
+              <button type="button" className="icon icon-play" onClick={this.activeTimer} />
+              <button type="button" className="icon icon-pause" onClick={this.deactivatedTimer} />
               <span className="timer">
-                {minutes}:{seconds}
+                {minutes > 9 ? minutes : `0${minutes}`}:{seconds > 9 ? seconds : `0${seconds}`}
               </span>
             </span>
             <span className="description">
