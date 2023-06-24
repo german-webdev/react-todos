@@ -43,19 +43,9 @@ class App extends Component {
       });
     };
 
-    this.editItem = (text) => {
-      const newItem = this.createEditedItem(text);
+    // this.editItem = (text) => {
 
-      this.setState(({ todoData }) => {
-        const edit = todoData.findIndex((el) => el.edit);
-
-        const newArray = [...todoData.slice(0, edit), newItem, ...todoData.slice(edit + 1)];
-
-        return {
-          todoData: newArray,
-        };
-      });
-    };
+    // }
 
     this.toggleProperty = (arr, id, propName) => {
       const index = arr.findIndex((el) => el.id === id);
@@ -67,6 +57,35 @@ class App extends Component {
       };
 
       return [...arr.slice(0, index), newItem, ...arr.slice(index + 1)];
+    };
+
+    this.changeLabel = (arr, id, value) => {
+      console.log(arr);
+      console.log(id);
+      console.log(value);
+      const index = arr.findIndex((el) => el.id === id);
+      const oldItem = arr[index];
+      console.log(oldItem);
+      const newItem = {
+        ...oldItem,
+        label: value,
+      };
+      console.log(newItem);
+
+      return [...arr.slice(0, index), newItem, ...arr.slice(index + 1)];
+    };
+
+    this.getLabel = (label) => {
+      console.log(label);
+      return label;
+    };
+
+    this.getIdItem = (id) => {
+      this.setState(({ todoData }) => {
+        return {
+          todoData: this.changeLabel(todoData, id, this.getLabel()),
+        };
+      });
     };
 
     this.onToggleDone = (id) => {
@@ -118,15 +137,6 @@ class App extends Component {
     };
   }
 
-  createEditedItem(label) {
-    return {
-      id: this.id,
-      label,
-      completed: false,
-      edit: false,
-    };
-  }
-
   createTodoItem(label, minutes, seconds) {
     return {
       id: this.id++,
@@ -156,6 +166,8 @@ class App extends Component {
             onToggleDone={this.onToggleDone}
             onToggleEdit={this.onToggleEdit}
             onEditItem={this.editItem}
+            getLabel={this.getLabel}
+            getIdItem={this.getIdItem}
           />
           <Footer
             toDo={todoCount}

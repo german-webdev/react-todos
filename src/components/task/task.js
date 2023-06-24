@@ -33,10 +33,11 @@ class Task extends Component {
 
     this.onEdit = (event) => {
       event.preventDefault();
-      this.props.onEditItem(this.state.label);
+      this.props.getLabel(this.state.label);
       this.setState({
         label: '',
       });
+      console.log(this.state.created);
     };
 
     this.handleButtonClick = () => {
@@ -96,19 +97,33 @@ class Task extends Component {
         clearInterval(this.startTimer);
       }
     }, 1000);
+
+    this.keyDownEventHandler = (event) => {
+      if (event.key === 'Enter') {
+        this.onEdit(event);
+      }
+    };
+    document.addEventListener('keydown', this.keyDownEventHandler);
+
+    this.eventsEdit = () => {
+      this.props.onToggleEdit();
+      this.props.getIdItem();
+    };
   }
 
   componentWillUnmount() {
     clearInterval(this.startTimer);
     clearInterval(this.elapsedTimeInterval);
+    document.removeEventListener('keydown', this.keyDownEventHandler);
   }
 
   render() {
-    const { completed, edit, label, onDeleted, onToggleDone, onToggleEdit } = this.props;
+    const { completed, edit, label, onDeleted, onToggleDone } = this.props;
     const { created, elapsedTime, minutes, seconds } = this.state;
 
     let classNames = 'active';
-    const editor = 'edit';
+    // eslint-disable-next-line prefer-const
+    let editor = 'edit';
     let formClass = 'visible';
     if (completed) {
       classNames = 'completed';
@@ -141,7 +156,7 @@ class Task extends Component {
             type="button"
             className="icon icon-edit"
             aria-label={this.handleButtonClick()}
-            onClick={onToggleEdit}
+            onClick={() => this.eventsEdit()}
           />
           <button type="button" className="icon icon-destroy" aria-label={onDeleted} onClick={onDeleted} />
         </div>

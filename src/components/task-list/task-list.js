@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Task from '../task';
 
-function TaskList({ todos, onDeleted, onToggleDone, onToggleEdit, onEditItem }) {
+function TaskList({ todos, onDeleted, onToggleDone, onToggleEdit, onEditItem, getIdItem, getLabel }) {
   return (
     <ul className="todo-list">
       {todos.map((item) => {
@@ -17,6 +17,8 @@ function TaskList({ todos, onDeleted, onToggleDone, onToggleEdit, onEditItem }) 
             onToggleDone={() => onToggleDone(item.id)}
             onToggleEdit={() => onToggleEdit(item.id)}
             onEditItem={onEditItem}
+            getLabel={getLabel}
+            getIdItem={() => getIdItem(item.id)}
           />
         );
       })}
