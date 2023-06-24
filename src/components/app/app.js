@@ -11,7 +11,11 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      todoData: [this.createTodoItem('Task 1'), this.createTodoItem('Task 2'), this.createTodoItem('Task 3')],
+      todoData: [
+        this.createTodoItem('Task 1', 12, 25),
+        this.createTodoItem('Task 2', 13, 26),
+        this.createTodoItem('Task 3', 14, 27),
+      ],
       filter: 'all',
     };
 
@@ -27,8 +31,8 @@ class App extends Component {
       });
     };
 
-    this.addItem = (text) => {
-      const newItem = this.createTodoItem(text);
+    this.addItem = (text, min, sec) => {
+      const newItem = this.createTodoItem(text, min, sec);
 
       this.setState(({ todoData }) => {
         const newArray = [...todoData, newItem];
@@ -40,7 +44,7 @@ class App extends Component {
     };
 
     this.editItem = (text) => {
-      const newItem = this.createTodoItem(text);
+      const newItem = this.createEditedItem(text);
 
       this.setState(({ todoData }) => {
         const edit = todoData.findIndex((el) => el.edit);
@@ -114,10 +118,21 @@ class App extends Component {
     };
   }
 
-  createTodoItem(label) {
+  createEditedItem(label) {
+    return {
+      id: this.id,
+      label,
+      completed: false,
+      edit: false,
+    };
+  }
+
+  createTodoItem(label, minutes, seconds) {
     return {
       id: this.id++,
       label,
+      minutes,
+      seconds,
       completed: false,
       edit: false,
     };

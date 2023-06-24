@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { formatDistanceToNow } from 'date-fns';
@@ -8,6 +9,8 @@ class Task extends Component {
     this.state = {
       created: 'created',
       label: this.props.label,
+      minutes: this.props.minutes,
+      seconds: this.props.seconds,
       createdTime: new Date(),
       elapsedTime: 'now',
     };
@@ -58,7 +61,7 @@ class Task extends Component {
 
   render() {
     const { completed, edit, label, onDeleted, onToggleDone, onToggleEdit } = this.props;
-    const { created, elapsedTime } = this.state;
+    const { created, elapsedTime, minutes, seconds } = this.state;
 
     let classNames = 'active';
     const editor = 'edit';
@@ -78,8 +81,15 @@ class Task extends Component {
         <div className="view">
           <input className="toggle" type="checkbox" onChange={onToggleDone} />
           <label>
-            <span className="description">{label}</span>
-            <span className="created">
+            <span className="title">{label}</span>
+            <span className="description">
+              <button type="button" className="icon icon-play" />
+              <button type="button" className="icon icon-pause" />
+              <span className="timer">
+                {minutes}:{seconds}
+              </span>
+            </span>
+            <span className="description">
               {created} {elapsedTime}
             </span>
           </label>

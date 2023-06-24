@@ -5,6 +5,8 @@ class NewTaskForm extends Component {
     super(props);
     this.state = {
       label: '',
+      minutes: null,
+      seconds: null,
     };
 
     this.onLabelChange = (event) => {
@@ -13,24 +15,66 @@ class NewTaskForm extends Component {
       });
     };
 
+    this.onMinutesChange = (event) => {
+      this.setState({
+        minutes: event.target.value,
+      });
+    };
+
+    this.onSecondsChange = (event) => {
+      this.setState({
+        seconds: event.target.value,
+      });
+    };
+
     this.onSubmit = (event) => {
+      const { label, minutes, seconds } = this.state;
       event.preventDefault();
-      this.props.onItemAdded(this.state.label);
+      this.props.onItemAdded(label, minutes, seconds);
       this.setState({
         label: '',
+        minutes: null,
+        seconds: null,
       });
     };
   }
 
   render() {
+    const { label, minutes, seconds } = this.state;
+
+    const viewMinutes =
+      minutes !== null &&
+      minutes !== '' &&
+      minutes.match(/^([0-9]{0,2}((-[0-9]{0,}){0,2})(,([0-9]{0,2}((-[0-9]{0,2}){0,1}))){0,})$/)
+        ? minutes
+        : '';
+    const viewSeconds =
+      seconds !== null && seconds.match(/^([0-9]{0,2}((-[0-9]{0,}){0,2})(,([0-9]{0,2}((-[0-9]{0,2}){0,1}))){0,})$/)
+        ? seconds
+        : '';
+
     return (
-      <form onSubmit={this.onSubmit}>
+      <form className="new-todo-form" onSubmit={this.onSubmit}>
         <input
           type="text"
           className="new-todo"
           onChange={this.onLabelChange}
           placeholder="What needs to be done?"
-          value={this.state.label}
+          value={label}
+        />
+        <input
+          type="text"
+          className="new-todo-form__timer"
+          onChange={this.onMinutesChange}
+          placeholder="Min"
+          value={viewMinutes}
+        />
+        <input
+          type="text"
+          className="new-todo-form__timer"
+          onChange={this.onSecondsChange}
+          placeholder="Sec"
+          value={viewSeconds}
         />
       </form>
     );
