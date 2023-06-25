@@ -9,9 +9,9 @@ class Task extends Component {
     this.state = {
       created: 'created',
       label: this.props.label,
-      minutes: this.props.minutes,
+      minutes: props.minutes,
       seconds: this.props.seconds,
-      timerActive: false,
+      timerIsActive: false,
 
       createdTime: new Date(),
       elapsedTime: 'now',
@@ -46,20 +46,44 @@ class Task extends Component {
       }, 100);
     };
 
-    this.activeTimer = () => {
-      this.setState(() => {
-        return {
-          timerActive: true,
-        };
-      });
+    this.startCountdown = () => {
+      if (this.state.timerIsActive) {
+        return;
+      }
+      this.timer = setInterval(() => {
+        this.setState((prevState) => {
+          let { minutes, seconds } = prevState;
+
+          if (minutes === 0 && seconds === 0) {
+            clearInterval(this.timer);
+            return { timerIsActive: false };
+          }
+
+          if (seconds === 0) {
+            minutes--;
+            seconds = 59;
+          } else {
+            seconds--;
+          }
+
+          return {
+            minutes,
+            seconds,
+            isRunning: true,
+          };
+        });
+      }, 1000);
+
+      this.setState({ timerIsActive: true });
     };
 
-    this.deactivatedTimer = () => {
-      this.setState(() => {
-        return {
-          timerActive: false,
-        };
-      });
+    this.pauseCountdown = () => {
+      clearInterval(this.timer);
+      this.setState({ timerIsActive: false });
+    };
+
+    this.formatTime = (time) => {
+      return time < 10 ? `0${time}` : time;
     };
   }
 
@@ -72,31 +96,6 @@ class Task extends Component {
         };
       });
     }, updateInterval);
-
-    this.startTimer = setInterval(() => {
-      const { minutes, seconds, timerActive } = this.state;
-
-      if ((seconds > 0 || minutes > 0) && timerActive) {
-        this.setState(() => {
-          return {
-            seconds: seconds - 1,
-          };
-        });
-      }
-
-      if ((seconds === 0 || seconds === -1) && minutes >= 1) {
-        this.setState(() => {
-          return {
-            minutes: minutes - 1,
-            seconds: seconds + 59,
-          };
-        });
-      }
-
-      if (minutes === 0 && seconds === 0) {
-        clearInterval(this.startTimer);
-      }
-    }, 1000);
 
     this.keyDownEventHandler = (event) => {
       if (event.key === 'Enter') {
@@ -112,7 +111,7 @@ class Task extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.startTimer);
+    clearInterval(this.timer);
     clearInterval(this.elapsedTimeInterval);
     document.removeEventListener('keydown', this.keyDownEventHandler);
   }
@@ -122,8 +121,7 @@ class Task extends Component {
     const { created, elapsedTime, minutes, seconds } = this.state;
 
     let classNames = 'active';
-    // eslint-disable-next-line prefer-const
-    let editor = 'edit';
+    const editor = 'edit';
     let formClass = 'visible';
     if (completed) {
       classNames = 'completed';
@@ -142,10 +140,11 @@ class Task extends Component {
           <label>
             <span className="title">{label}</span>
             <span className="description">
-              <button type="button" className="icon icon-play" onClick={this.activeTimer} />
-              <button type="button" className="icon icon-pause" onClick={this.deactivatedTimer} />
+              <button type="button" className="icon icon-play" onClick={this.startCountdown} />
+              <button type="button" className="icon icon-pause" onClick={this.pauseCountdown} />
+
               <span className="timer">
-                {minutes > 9 ? minutes : `0${minutes}`}:{seconds > 9 ? seconds : `0${seconds}`}
+                {this.formatTime(minutes)}:{this.formatTime(seconds)}
               </span>
             </span>
             <span className="description">
