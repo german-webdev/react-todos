@@ -168,8 +168,11 @@ Task.defaultProps = {
 Task.propTypes = {
   updateInterval: PropTypes.number,
   label: PropTypes.node.isRequired,
+  minutes: PropTypes.number.isRequired,
+  seconds: PropTypes.number.isRequired,
   edit: PropTypes.bool.isRequired,
   completed: PropTypes.bool.isRequired,
+  setLabel: PropTypes.func.isRequired,
 };
 
 export default Task;
