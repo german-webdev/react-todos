@@ -31,7 +31,7 @@ class NewTaskForm extends Component {
       const { label, minutes, seconds } = this.state;
       event.preventDefault();
       if (label !== '' && minutes !== '' && seconds !== '') {
-        this.props.onItemAdded(label, minutes, seconds);
+        this.props.onItemAdded(label, Number(minutes), Number(seconds));
         this.setState({
           label: '',
           minutes: null,
@@ -57,14 +57,8 @@ class NewTaskForm extends Component {
   render() {
     const { label, minutes, seconds } = this.state;
 
-    const viewMinutes =
-      minutes !== null && minutes.match(/^([0-9]{0,2}((-[0-9]{0,}){0,2})(,([0-9]{0,2}((-[0-9]{0,2}){0,1}))){0,})$/)
-        ? minutes
-        : '';
-    const viewSeconds =
-      seconds !== null && seconds.match(/^([0-9]{0,2}((-[0-9]{0,}){0,2})(,([0-9]{0,2}((-[0-9]{0,2}){0,1}))){0,})$/)
-        ? seconds
-        : '';
+    const viewMinutes = minutes !== null && minutes.match(/^(?:[0-9]|[1-5][0-9])$/) ? minutes : '';
+    const viewSeconds = seconds !== null && seconds.match(/^(?:[0-9]|[1-5][0-9])$/) ? seconds : '';
 
     return (
       <form className="new-todo-form" onSubmit={this.onSubmit}>

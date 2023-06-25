@@ -9,7 +9,7 @@ class Task extends Component {
     this.state = {
       created: 'created',
       label: this.props.label,
-      minutes: props.minutes,
+      minutes: this.props.minutes,
       seconds: this.props.seconds,
       timerIsActive: false,
 
@@ -19,25 +19,17 @@ class Task extends Component {
 
     this.inputRef = React.createRef();
 
-    this.edited = () => {
-      this.setState({
-        created: 'edit',
-      });
-    };
-
     this.onLabelChange = (event) => {
       this.setState({
         label: event.target.value,
       });
     };
 
-    this.onEdit = (event) => {
-      event.preventDefault();
-      this.props.getLabel(this.state.label);
-      this.setState({
-        label: '',
-      });
-      console.log(this.state.created);
+    this.onEdit = () => {
+      if (this.props.edit) {
+        this.setState({ created: 'edit' });
+        this.props.setLabel(this.state.label);
+      }
     };
 
     this.handleButtonClick = () => {
@@ -103,11 +95,6 @@ class Task extends Component {
       }
     };
     document.addEventListener('keydown', this.keyDownEventHandler);
-
-    this.eventsEdit = () => {
-      this.props.onToggleEdit();
-      this.props.getIdItem();
-    };
   }
 
   componentWillUnmount() {
@@ -117,7 +104,7 @@ class Task extends Component {
   }
 
   render() {
-    const { completed, edit, label, onDeleted, onToggleDone } = this.props;
+    const { completed, edit, label, onDeleted, onToggleDone, onToggleEdit } = this.props;
     const { created, elapsedTime, minutes, seconds } = this.state;
 
     let classNames = 'active';
@@ -155,11 +142,11 @@ class Task extends Component {
             type="button"
             className="icon icon-edit"
             aria-label={this.handleButtonClick()}
-            onClick={() => this.eventsEdit()}
+            onClick={onToggleEdit}
           />
           <button type="button" className="icon icon-destroy" aria-label={onDeleted} onClick={onDeleted} />
         </div>
-        <form className={formClass} onChange={this.edited} onSubmit={this.onEdit}>
+        <form className={formClass}>
           <input
             type="text"
             ref={this.inputRef}

@@ -43,10 +43,6 @@ class App extends Component {
       });
     };
 
-    // this.editItem = (text) => {
-
-    // }
-
     this.toggleProperty = (arr, id, propName) => {
       const index = arr.findIndex((el) => el.id === id);
 
@@ -59,33 +55,13 @@ class App extends Component {
       return [...arr.slice(0, index), newItem, ...arr.slice(index + 1)];
     };
 
-    this.changeLabel = (arr, id, value) => {
-      console.log(arr);
-      console.log(id);
-      console.log(value);
-      const index = arr.findIndex((el) => el.id === id);
-      const oldItem = arr[index];
-      console.log(oldItem);
-      const newItem = {
-        ...oldItem,
-        label: value,
-      };
-      console.log(newItem);
+    this.setLabel = (id, label) => {
+      const { todoData } = this.state;
+      const taskIndex = todoData.findIndex((task) => task.id === id);
+      todoData[taskIndex].label = label;
+      todoData[taskIndex].edit = false;
 
-      return [...arr.slice(0, index), newItem, ...arr.slice(index + 1)];
-    };
-
-    this.getLabel = (label) => {
-      console.log(label);
-      return label;
-    };
-
-    this.getIdItem = (id) => {
-      this.setState(({ todoData }) => {
-        return {
-          todoData: this.changeLabel(todoData, id, this.getLabel()),
-        };
-      });
+      this.setState({ todoData });
     };
 
     this.onToggleDone = (id) => {
@@ -166,8 +142,7 @@ class App extends Component {
             onToggleDone={this.onToggleDone}
             onToggleEdit={this.onToggleEdit}
             onEditItem={this.editItem}
-            getLabel={this.getLabel}
-            getIdItem={this.getIdItem}
+            setLabel={this.setLabel}
           />
           <Footer
             toDo={todoCount}
