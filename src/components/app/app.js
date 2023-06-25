@@ -1,3 +1,4 @@
+/* eslint-disable react/no-access-state-in-setstate */
 import { React, Component } from 'react';
 
 import AppHeader from '../app-header';
@@ -8,6 +9,8 @@ import Footer from '../footer';
 class App extends Component {
   id = 1;
 
+  timers = {};
+
   constructor() {
     super();
     this.state = {
@@ -17,9 +20,6 @@ class App extends Component {
         this.createTodoItem('Task 3', 14, 27),
       ],
       filter: 'all',
-      minutes: 0,
-      seconds: 0,
-      timerIsActive: false,
     };
 
     this.deleteItem = (id) => {
@@ -115,45 +115,80 @@ class App extends Component {
       });
     };
 
-    this.startCountdown = () => {
-      if (this.state.timerIsActive) {
-        return;
-      }
-      this.timer = setInterval(() => {
-        this.setState((prevState) => {
-          let { minutes, seconds } = prevState;
+    this.startCountdown = (id) => {
+      const updatedTodoData = this.state.todoData.map((task) => {
+        if (task.id === id && !task.timerIsActive) {
+          const timer = setInterval(() => {
+            this.setState((prevState) => {
+              const { todoData } = prevState;
+              const taskIndex = todoData.findIndex((t) => t.id === id);
+              const currentTask = todoData[taskIndex];
 
-          if (minutes === 0 && seconds === 0) {
-            clearInterval(this.timer);
-            return { timerIsActive: false };
-          }
+              let { minutes, seconds } = currentTask;
 
-          if (seconds === 0) {
-            minutes--;
-            seconds = 59;
-          } else {
-            seconds--;
-          }
+              if (minutes === 0 && seconds === 0) {
+                clearInterval(this.timers[id]);
+                return {
+                  todoData: [
+                    ...todoData.slice(0, taskIndex),
+                    { ...currentTask, timerIsActive: false },
+                    ...todoData.slice(taskIndex + 1),
+                  ],
+                };
+              }
+
+              if (seconds === 0) {
+                minutes--;
+                seconds = 59;
+              } else {
+                seconds--;
+              }
+
+              return {
+                todoData: [
+                  ...todoData.slice(0, taskIndex),
+                  { ...currentTask, minutes, seconds, timerIsActive: true },
+                  ...todoData.slice(taskIndex + 1),
+                ],
+              };
+            });
+          }, 1000);
+
+          this.timers[id] = timer;
 
           return {
-            minutes,
-            seconds,
+            ...task,
             timerIsActive: true,
           };
-        });
-      }, 1000);
+        }
 
-      this.setState({ timerIsActive: true });
+        return task;
+      });
+
+      this.setState({ todoData: updatedTodoData });
     };
 
-    this.pauseCountdown = () => {
-      clearInterval(this.timer);
-      this.setState({ timerIsActive: false });
+    this.pauseCountdown = (id) => {
+      clearInterval(this.timers[id]);
+      delete this.timers[id];
+
+      const updatedTodoData = this.state.todoData.map((task) => {
+        if (task.id === id) {
+          return {
+            ...task,
+            timerIsActive: false,
+          };
+        }
+
+        return task;
+      });
+
+      this.setState({ todoData: updatedTodoData });
     };
   }
 
   componentWillUnmount() {
-    clearInterval(this.timer);
+    Object.values(this.timers).forEach((timer) => clearInterval(timer));
   }
 
   createTodoItem(label, minutes, seconds) {

@@ -27,8 +27,8 @@ function TaskList({
             onToggleEdit={() => onToggleEdit(item.id)}
             onEditItem={onEditItem}
             setLabel={(label) => setLabel(item.id, label)}
-            onStartCountdown={onStartCountdown}
-            onPauseCountdown={onPauseCountdown}
+            onStartCountdown={() => onStartCountdown(item.id)}
+            onPauseCountdown={() => onPauseCountdown(item.id)}
           />
         );
       })}
