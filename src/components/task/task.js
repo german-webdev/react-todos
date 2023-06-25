@@ -11,7 +11,6 @@ class Task extends Component {
       label: this.props.label,
       minutes: this.props.minutes,
       seconds: this.props.seconds,
-      timerActive: false,
 
       createdTime: new Date(),
       elapsedTime: 'now',
@@ -39,19 +38,24 @@ class Task extends Component {
     };
 
     this.activeTimer = () => {
-      this.setState(() => {
-        return {
-          timerActive: true,
-        };
-      });
+      this.startTimer = setInterval(() => {
+        const { minutes, seconds } = this.state;
+
+        const offset = minutes * 60 + seconds - 1;
+
+        if (offset <= 0) {
+          clearInterval(this.startTimer);
+        }
+
+        this.setState({
+          minutes: Math.floor(offset / 60),
+          seconds: offset % 60,
+        });
+      }, 1000);
     };
 
     this.deactivatedTimer = () => {
-      this.setState(() => {
-        return {
-          timerActive: false,
-        };
-      });
+      clearInterval(this.startTimer);
     };
   }
 
@@ -64,31 +68,6 @@ class Task extends Component {
         };
       });
     }, updateInterval);
-
-    this.startTimer = setInterval(() => {
-      const { minutes, seconds, timerActive } = this.state;
-
-      if ((seconds > 0 || minutes > 0) && timerActive) {
-        this.setState(() => {
-          return {
-            seconds: seconds - 1,
-          };
-        });
-      }
-
-      if ((seconds === 0 || seconds === -1) && minutes >= 1) {
-        this.setState(() => {
-          return {
-            minutes: minutes - 1,
-            seconds: seconds + 59,
-          };
-        });
-      }
-
-      if (minutes === 0 && seconds === 0) {
-        clearInterval(this.startTimer);
-      }
-    }, 1000);
 
     this.keyDownEventHandler = (event) => {
       if (event.key === 'Enter') {

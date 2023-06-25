@@ -43,10 +43,6 @@ class App extends Component {
       });
     };
 
-    // this.editItem = (text) => {
-
-    // }
-
     this.toggleProperty = (arr, id, propName) => {
       const index = arr.findIndex((el) => el.id === id);
 
@@ -55,8 +51,6 @@ class App extends Component {
         ...oldItem,
         [propName]: !oldItem[propName],
       };
-
-      console.log('toggle', index, newItem);
 
       return [...arr.slice(0, index), newItem, ...arr.slice(index + 1)];
     };
@@ -124,8 +118,8 @@ class App extends Component {
     return {
       id: this.id++,
       label,
-      minutes,
-      seconds,
+      minutes: Number(minutes),
+      seconds: Number(seconds),
       completed: false,
       edit: false,
     };
