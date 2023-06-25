@@ -19,25 +19,17 @@ class Task extends Component {
 
     this.inputRef = React.createRef();
 
-    this.edited = () => {
-      this.setState({
-        created: 'edit',
-      });
-    };
-
     this.onLabelChange = (event) => {
       this.setState({
         label: event.target.value,
       });
     };
 
-    this.onEdit = (event) => {
-      event.preventDefault();
-      this.props.getLabel(this.state.label);
-      this.setState({
-        label: '',
-      });
-      console.log(this.state.created);
+    this.onEdit = () => {
+      if (this.props.edit) {
+        this.setState({ created: 'edit' });
+        this.props.setLabel(this.state.label);
+      }
     };
 
     this.handleButtonClick = () => {
@@ -107,7 +99,6 @@ class Task extends Component {
 
     this.eventsEdit = () => {
       this.props.onToggleEdit();
-      this.props.getIdItem();
     };
   }
 
@@ -160,7 +151,7 @@ class Task extends Component {
           />
           <button type="button" className="icon icon-destroy" aria-label={onDeleted} onClick={onDeleted} />
         </div>
-        <form className={formClass} onChange={this.edited} onSubmit={this.onEdit}>
+        <form className={formClass}>
           <input
             type="text"
             ref={this.inputRef}

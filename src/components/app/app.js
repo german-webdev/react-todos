@@ -56,36 +56,19 @@ class App extends Component {
         [propName]: !oldItem[propName],
       };
 
-      return [...arr.slice(0, index), newItem, ...arr.slice(index + 1)];
-    };
-
-    this.changeLabel = (arr, id, value) => {
-      console.log(arr);
-      console.log(id);
-      console.log(value);
-      const index = arr.findIndex((el) => el.id === id);
-      const oldItem = arr[index];
-      console.log(oldItem);
-      const newItem = {
-        ...oldItem,
-        label: value,
-      };
-      console.log(newItem);
+      console.log('toggle', index, newItem);
 
       return [...arr.slice(0, index), newItem, ...arr.slice(index + 1)];
     };
 
-    this.getLabel = (label) => {
-      console.log(label);
-      return label;
-    };
+    this.setLabel = (id, label) => {
+      const { todoData } = this.state;
+      const taskIndex = todoData.findIndex((task) => task.id === id);
 
-    this.getIdItem = (id) => {
-      this.setState(({ todoData }) => {
-        return {
-          todoData: this.changeLabel(todoData, id, this.getLabel()),
-        };
-      });
+      todoData[taskIndex].label = label;
+      todoData[taskIndex].edit = false;
+
+      this.setState({ todoData });
     };
 
     this.onToggleDone = (id) => {
@@ -97,15 +80,15 @@ class App extends Component {
     };
 
     this.onToggleEdit = (id) => {
-      this.state.todoData.map((item) => {
+      const { todoData } = this.state;
+
+      todoData.map((item) => {
         item.edit = false;
         return item;
       });
 
-      this.setState(({ todoData }) => {
-        return {
-          todoData: this.toggleProperty(todoData, id, 'edit'),
-        };
+      this.setState({
+        todoData: this.toggleProperty(todoData, id, 'edit'),
       });
     };
 
@@ -166,8 +149,7 @@ class App extends Component {
             onToggleDone={this.onToggleDone}
             onToggleEdit={this.onToggleEdit}
             onEditItem={this.editItem}
-            getLabel={this.getLabel}
-            getIdItem={this.getIdItem}
+            setLabel={this.setLabel}
           />
           <Footer
             toDo={todoCount}
