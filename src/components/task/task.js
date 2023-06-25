@@ -25,7 +25,9 @@ class Task extends Component {
     this.onEdit = () => {
       if (this.props.edit) {
         this.setState({ created: 'edit' });
-        this.props.setLabel(this.state.label);
+        if (this.state.label !== '') {
+          this.props.setLabel(this.state.label);
+        }
       }
     };
 
