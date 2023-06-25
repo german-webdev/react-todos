@@ -9,9 +9,6 @@ class Task extends Component {
     this.state = {
       created: 'created',
       label: this.props.label,
-      minutes: this.props.minutes,
-      seconds: this.props.seconds,
-      timerIsActive: false,
 
       createdTime: new Date(),
       elapsedTime: 'now',
@@ -38,42 +35,6 @@ class Task extends Component {
       }, 100);
     };
 
-    this.startCountdown = () => {
-      if (this.state.timerIsActive) {
-        return;
-      }
-      this.timer = setInterval(() => {
-        this.setState((prevState) => {
-          let { minutes, seconds } = prevState;
-
-          if (minutes === 0 && seconds === 0) {
-            clearInterval(this.timer);
-            return { timerIsActive: false };
-          }
-
-          if (seconds === 0) {
-            minutes--;
-            seconds = 59;
-          } else {
-            seconds--;
-          }
-
-          return {
-            minutes,
-            seconds,
-            isRunning: true,
-          };
-        });
-      }, 1000);
-
-      this.setState({ timerIsActive: true });
-    };
-
-    this.pauseCountdown = () => {
-      clearInterval(this.timer);
-      this.setState({ timerIsActive: false });
-    };
-
     this.formatTime = (time) => {
       return time < 10 ? `0${time}` : time;
     };
@@ -98,14 +59,24 @@ class Task extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.timer);
     clearInterval(this.elapsedTimeInterval);
     document.removeEventListener('keydown', this.keyDownEventHandler);
   }
 
   render() {
-    const { completed, edit, label, onDeleted, onToggleDone, onToggleEdit } = this.props;
-    const { created, elapsedTime, minutes, seconds } = this.state;
+    const {
+      completed,
+      edit,
+      label,
+      onDeleted,
+      onToggleDone,
+      onToggleEdit,
+      onStartCountdown,
+      onPauseCountdown,
+      minutes,
+      seconds,
+    } = this.props;
+    const { created, elapsedTime } = this.state;
 
     let classNames = 'active';
     const editor = 'edit';
@@ -127,8 +98,8 @@ class Task extends Component {
           <label>
             <span className="title">{label}</span>
             <span className="description">
-              <button type="button" className="icon icon-play" onClick={this.startCountdown} />
-              <button type="button" className="icon icon-pause" onClick={this.pauseCountdown} />
+              <button type="button" className="icon icon-play" onClick={onStartCountdown} />
+              <button type="button" className="icon icon-pause" onClick={onPauseCountdown} />
 
               <span className="timer">
                 {this.formatTime(minutes)}:{this.formatTime(seconds)}
@@ -168,8 +139,6 @@ Task.defaultProps = {
 Task.propTypes = {
   updateInterval: PropTypes.number,
   label: PropTypes.node.isRequired,
-  minutes: PropTypes.number.isRequired,
-  seconds: PropTypes.number.isRequired,
   edit: PropTypes.bool.isRequired,
   completed: PropTypes.bool.isRequired,
   setLabel: PropTypes.func.isRequired,

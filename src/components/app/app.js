@@ -17,6 +17,9 @@ class App extends Component {
         this.createTodoItem('Task 3', 14, 27),
       ],
       filter: 'all',
+      minutes: 0,
+      seconds: 0,
+      timerIsActive: false,
     };
 
     this.deleteItem = (id) => {
@@ -111,6 +114,46 @@ class App extends Component {
         };
       });
     };
+
+    this.startCountdown = () => {
+      if (this.state.timerIsActive) {
+        return;
+      }
+      this.timer = setInterval(() => {
+        this.setState((prevState) => {
+          let { minutes, seconds } = prevState;
+
+          if (minutes === 0 && seconds === 0) {
+            clearInterval(this.timer);
+            return { timerIsActive: false };
+          }
+
+          if (seconds === 0) {
+            minutes--;
+            seconds = 59;
+          } else {
+            seconds--;
+          }
+
+          return {
+            minutes,
+            seconds,
+            timerIsActive: true,
+          };
+        });
+      }, 1000);
+
+      this.setState({ timerIsActive: true });
+    };
+
+    this.pauseCountdown = () => {
+      clearInterval(this.timer);
+      this.setState({ timerIsActive: false });
+    };
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
   createTodoItem(label, minutes, seconds) {
@@ -119,6 +162,7 @@ class App extends Component {
       label,
       minutes,
       seconds,
+      timerIsActive: false,
       completed: false,
       edit: false,
     };
@@ -143,6 +187,8 @@ class App extends Component {
             onToggleEdit={this.onToggleEdit}
             onEditItem={this.editItem}
             setLabel={this.setLabel}
+            onStartCountdown={this.startCountdown}
+            onPauseCountdown={this.pauseCountdown}
           />
           <Footer
             toDo={todoCount}
