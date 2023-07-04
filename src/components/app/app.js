@@ -1,5 +1,6 @@
 /* eslint-disable react/no-access-state-in-setstate */
 import { React, Component } from 'react';
+import { formatDistanceToNow } from 'date-fns';
 
 import AppHeader from '../app-header';
 import NewTaskForm from '../new-task-form';
@@ -62,6 +63,7 @@ class App extends Component {
       const { todoData } = this.state;
       const taskIndex = todoData.findIndex((task) => task.id === id);
       todoData[taskIndex].label = label;
+      todoData[taskIndex].created = 'edit';
       todoData[taskIndex].edit = false;
 
       this.setState({ todoData });
@@ -187,7 +189,33 @@ class App extends Component {
     };
   }
 
+  componentDidMount() {
+    this.elapsedTimeInterval = setInterval(() => {
+      this.setState((prevState) => {
+        const { todoData } = prevState;
+        const updatedTodoData = todoData.map((task) => {
+          const elapsedTime = formatDistanceToNow(task.createdTime, { includeSeconds: true, addSuffix: true });
+          return {
+            ...task,
+            elapsedTime,
+          };
+        });
+
+        return {
+          todoData: updatedTodoData,
+        };
+      });
+    }, 1000);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.created !== prevState.created) {
+      this.elapsedTimeInterval();
+    }
+  }
+
   componentWillUnmount() {
+    clearInterval(this.elapsedTimeInterval);
     Object.values(this.timers).forEach((timer) => clearInterval(timer));
   }
 
@@ -200,6 +228,9 @@ class App extends Component {
       timerIsActive: false,
       completed: false,
       edit: false,
+      created: 'created',
+      createdTime: new Date(),
+      elapsedTime: 'now',
     };
   }
 
@@ -224,6 +255,8 @@ class App extends Component {
             setLabel={this.setLabel}
             onStartCountdown={this.startCountdown}
             onPauseCountdown={this.pauseCountdown}
+            elapsedTimeInterval={this.elapsedTimeInterval}
+            onEdit={this.onEdit}
           />
           <Footer
             toDo={todoCount}

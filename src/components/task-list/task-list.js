@@ -12,6 +12,7 @@ function TaskList({
   setLabel,
   onStartCountdown,
   onPauseCountdown,
+  elapsedTimeInterval,
 }) {
   return (
     <ul className="todo-list">
@@ -29,6 +30,7 @@ function TaskList({
             setLabel={(label) => setLabel(item.id, label)}
             onStartCountdown={() => onStartCountdown(item.id)}
             onPauseCountdown={() => onPauseCountdown(item.id)}
+            elapsedTimeInterval={elapsedTimeInterval}
           />
         );
       })}

@@ -1,17 +1,13 @@
+/* eslint-disable consistent-return */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { formatDistanceToNow } from 'date-fns';
 
 class Task extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      created: 'created',
       label: this.props.label,
-
-      createdTime: new Date(),
-      elapsedTime: 'now',
     };
 
     this.inputRef = React.createRef();
@@ -24,7 +20,6 @@ class Task extends Component {
 
     this.onEdit = () => {
       if (this.props.edit) {
-        this.setState({ created: 'edit' });
         if (this.state.label !== '') {
           this.props.setLabel(this.state.label);
         }
@@ -43,15 +38,6 @@ class Task extends Component {
   }
 
   componentDidMount() {
-    const { updateInterval } = this.props;
-    this.elapsedTimeInterval = setInterval(() => {
-      this.setState(({ createdTime }) => {
-        return {
-          elapsedTime: formatDistanceToNow(createdTime, { includeSeconds: true, addSuffix: true }),
-        };
-      });
-    }, updateInterval);
-
     this.keyDownEventHandler = (event) => {
       if (event.key === 'Enter') {
         this.onEdit(event);
@@ -61,7 +47,6 @@ class Task extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.elapsedTimeInterval);
     document.removeEventListener('keydown', this.keyDownEventHandler);
   }
 
@@ -77,8 +62,9 @@ class Task extends Component {
       onPauseCountdown,
       minutes,
       seconds,
+      created,
+      elapsedTime,
     } = this.props;
-    const { created, elapsedTime } = this.state;
 
     let classNames = 'active';
     const editor = 'edit';
@@ -134,12 +120,7 @@ class Task extends Component {
   }
 }
 
-Task.defaultProps = {
-  updateInterval: 100000,
-};
-
 Task.propTypes = {
-  updateInterval: PropTypes.number,
   label: PropTypes.node.isRequired,
   edit: PropTypes.bool.isRequired,
   completed: PropTypes.bool.isRequired,
