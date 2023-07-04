@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 function Task({
@@ -20,13 +20,13 @@ function Task({
   const [label, setLabelState] = useState(initialLabel);
   const inputRef = useRef(null);
 
-  const onEdit = useCallback(() => {
+  const onEdit = () => {
     if (edit) {
       if (label !== '') {
         setLabel(label);
       }
     }
-  }, [edit, label, setLabel]);
+  };
 
   useEffect(() => {
     const keyDownEventHandler = (event) => {
@@ -71,7 +71,7 @@ function Task({
   return (
     <li className={classNames}>
       <div className="view">
-        <input className="toggle" type="checkbox" onChange={onToggleDone} />
+        <input className="toggle" type="checkbox" checked={completed} onChange={onToggleDone} />
         <label>
           <span className="title">{label}</span>
           <span className="description">

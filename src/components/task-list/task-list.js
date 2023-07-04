@@ -42,7 +42,7 @@ TaskList.propTypes = {
   onToggleEdit: PropTypes.func.isRequired,
   todos: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      id: PropTypes.node.isRequired,
       label: PropTypes.node.isRequired,
       completed: PropTypes.bool.isRequired,
       edit: PropTypes.bool.isRequired,

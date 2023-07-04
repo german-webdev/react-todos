@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function NewTaskForm({ onItemAdded }) {
   const [label, setLabel] = useState('');
@@ -17,18 +17,15 @@ function NewTaskForm({ onItemAdded }) {
     setSeconds(event.target.value);
   };
 
-  const onSubmit = useCallback(
-    (event) => {
-      event.preventDefault();
-      if (label !== '' && minutes !== '' && seconds !== '') {
-        onItemAdded(label, Number(minutes), Number(seconds));
-        setLabel('');
-        setMinutes(null);
-        setSeconds(null);
-      }
-    },
-    [label, minutes, seconds, onItemAdded]
-  );
+  const onSubmit = (event) => {
+    event.preventDefault();
+    if (label !== '' && minutes !== '' && seconds !== '') {
+      onItemAdded(label, Number(minutes), Number(seconds));
+      setLabel('');
+      setMinutes('');
+      setSeconds('');
+    }
+  };
 
   useEffect(() => {
     const keyDownEventHandler = (event) => {
