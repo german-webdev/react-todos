@@ -256,7 +256,6 @@ class App extends Component {
             onStartCountdown={this.startCountdown}
             onPauseCountdown={this.pauseCountdown}
             elapsedTimeInterval={this.elapsedTimeInterval}
-            onEdit={this.onEdit}
           />
           <Footer
             toDo={todoCount}
