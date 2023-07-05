@@ -35,7 +35,16 @@ function App(props) {
   const [filter, setFilter] = useState('all');
 
   const deleteItem = (id) => {
-    setTodoData((prevTodoData) => prevTodoData.filter((el) => el.id !== id));
+    setTodoData(
+      todoData
+        .map((task) => {
+          if (task.id === id) {
+            clearInterval(task.timerId);
+          }
+          return task;
+        })
+        .filter((el) => el.id !== id)
+    );
   };
 
   const addItem = (text, min, sec) => {
@@ -50,8 +59,8 @@ function App(props) {
   };
 
   const setLabel = (id, label) => {
-    setTodoData((prevTodoData) => {
-      return prevTodoData.map((task) => {
+    setTodoData(
+      todoData.map((task) => {
         if (task.id === id) {
           if (task.created === 'created' && task.elapsedTimeInterval) {
             clearInterval(task.elapsedTimeInterval);
@@ -69,12 +78,12 @@ function App(props) {
           };
         }
         return task;
-      });
-    });
+      })
+    );
   };
 
   const onToggleDone = (id) => {
-    setTodoData((prevTodoData) => toggleProperty(prevTodoData, id, 'completed'));
+    setTodoData(toggleProperty(todoData, id, 'completed'));
   };
 
   const onToggleEdit = (id) => {
@@ -102,12 +111,12 @@ function App(props) {
   };
 
   const clearDone = () => {
-    setTodoData((prevTodoData) => prevTodoData.filter((el) => !el.completed));
+    setTodoData(todoData.filter((el) => !el.completed));
   };
 
   const startCountdown = (id) => {
-    setTodoData((prevTodoData) => {
-      return prevTodoData.map((task) => {
+    setTodoData(
+      todoData.map((task) => {
         if (task.id === id && !task.timerIsActive) {
           const timerId = setInterval(() => {
             setTodoData((prevState) => {
@@ -141,20 +150,20 @@ function App(props) {
         }
 
         return task;
-      });
-    });
+      })
+    );
   };
 
   const pauseCountdown = (id) => {
-    setTodoData((prevTodoData) => {
-      return prevTodoData.map((task) => {
+    setTodoData(
+      todoData.map((task) => {
         if (task.id === id && task.timerIsActive) {
           clearInterval(task.timerId);
           return { ...task, timerIsActive: false };
         }
         return task;
-      });
-    });
+      })
+    );
   };
 
   useEffect(() => {
